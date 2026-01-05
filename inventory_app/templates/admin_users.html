@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Users') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Search name or email">
+  <button type="submit">Search</button>
+</form>
+<table>
+  <tr><th>ID</th><th>Name</th><th>Email</th><th>Admin</th><th></th></tr>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.id }}</td>
+    <td>{{ u.name }}</td>
+    <td>{{ u.email }}</td>
+    <td>{{ 'Yes' if u.is_admin else 'No' }}</td>
+    <td>
+      <a class="edit-btn" href="{{ url_for('admin_user_edit', uid=u.id) }}">Edit</a>
+      <form method="post" action="{{ url_for('admin_user_reset_parties', uid=u.id) }}" style="display:inline" onsubmit="return confirm('Reset customers and suppliers for this user?')">
+        <button class="pill-btn" type="submit">Reset Parties</button>
+      </form>
+      <form method="post" action="{{ url_for('admin_user_delete', uid=u.id) }}" style="display:inline" onsubmit="return confirm('Delete this user and all their data?')">
+        <button class="pill-btn" type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

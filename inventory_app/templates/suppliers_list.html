@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Suppliers') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="{{ t('Search suppliers') }}">
+  <button type="submit">{{ t('Search') }}</button>
+  <a class="btn" href="{{ url_for('suppliers_new') }}">{{ t('Add Supplier') }}</a>
+</form>
+<table>
+  <tr><th>{{ t('Name') }}</th><th>{{ t('Email') }}</th><th>{{ t('Phone') }}</th></tr>
+  {% for s in suppliers %}
+  <tr><td>{{ s.name }}</td><td>{{ s.email }}</td><td>{{ s.phone }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

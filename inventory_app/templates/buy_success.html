@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="success-wrap">
+  <div class="success-card">
+    <h1 class="success-title">Payment Successful</h1>
+    <p class="success-sub">Finalizing your access and generating your one-time key.</p>
+    <div class="success-meta"></div>
+    <div id="keyArea" style="display:none;">
+      <div class="key-title">Your Access Key</div>
+      <div class="key-code" id="keyCode"></div>
+      <div class="key-meta" id="keyMeta"></div>
+      <div class="key-actions">
+        <a class="cta-btn" href="{{ url_for('auth_register') }}">Use Key to Create Account</a>
+        <button class="pill-btn" id="copyKey">Copy Key</button>
+      </div>
+      <p class="key-note">Use this key on the registration page to create your account.</p>
+    </div>
+    <div id="waitingArea">
+      <div class="wait-spin"></div>
+      <p class="wait-note">Waiting for payment confirmation...</p>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  function getParam(name){
+    return new URLSearchParams(location.search).get(name);
+  }
+  var email = getParam("email") || (function(){ try { return localStorage.getItem("buy_email") || ""; } catch(e){ return ""; } })();
+  var plan = getParam("plan") || "";
+  var meta = document.querySelector(".success-meta");
+  if(email){ meta.textContent = "Email: " + email + (plan ? " • Plan: " + plan : ""); }
+  function check(){
+    if(!email){ setTimeout(check, 2000); return; }
+    fetch("/buy/check_key?email=" + encodeURIComponent(email))
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.found){
+          document.getElementById("keyCode").textContent = j.code;
+          document.getElementById("keyMeta").textContent = "Plan: " + (j.plan || "") + (j.expires ? " • Expires: " + j.expires.substring(0,10) : "");
+          document.getElementById("waitingArea").style.display = "none";
+          document.getElementById("keyArea").style.display = "block";
+        } else {
+          setTimeout(check, 3000);
+        }
+      })
+      .catch(function(){ setTimeout(check, 4000); });
+  }
+  check();
+  var copyBtn = document.getElementById("copyKey");
+  if(copyBtn){
+    copyBtn.addEventListener("click", function(){
+      var text = document.getElementById("keyCode").textContent;
+      if(!text) return;
+      navigator.clipboard.writeText(text);
+      copyBtn.textContent = "Copied";
+      setTimeout(function(){ copyBtn.textContent = "Copy Key"; }, 1500);
+    });
+  }
+})();
+</script>
+{% endblock %}

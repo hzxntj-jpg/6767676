@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: inventory-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app
+    autoDeploy: true
+    envVars:
+      - key: FLASK_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: MERCADOPAGO_ACCESS_TOKEN
+        sync: false
+      - key: SQLALCHEMY_DATABASE_URI
+        sync: false
+    disk:
+      name: app-data
+      mountPath: /data
+      sizeGB: 1

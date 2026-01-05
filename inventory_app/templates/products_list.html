@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Products') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="{{ t('Search') }}">
+  <button type="submit">{{ t('Search') }}</button>
+  <a class="btn" href="{{ url_for('products_new') }}">{{ t('New Product') }}</a>
+  <a class="btn" href="{{ url_for('products_export') }}">{{ t('Export CSV') }}</a>
+</form>
+{% for group_name, items in groups %}
+<h2>{{ t(group_name) if group_name in ('Uncategorized','Search Results') else group_name }}</h2>
+{% if items|length == 0 %}
+<p style="color:#666">{{ t('No items') }}</p>
+{% else %}
+<table>
+  <tr><th>{{ t('SKU') }}</th><th>{{ t('Name') }}</th><th>{{ t('Category') }}</th><th>{{ t('Price') }}</th><th>{{ t('Stock') }}</th><th></th></tr>
+  {% for p in items %}
+  <tr>
+    <td>{{ p.sku }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.category_rel.name if p.category_rel else p.category }}</td>
+    <td>{{ "%.2f"|format(p.price) }}</td>
+    <td>
+      <div style="display:flex;align-items:center;gap:8px">
+        <form method="post" action="{{ url_for('product_stock_decrement', pid=p.id) }}">
+          <button type="submit" class="icon-btn minus">−</button>
+        </form>
+        <span>{{ p.stock }}</span>
+        <form method="post" action="{{ url_for('product_stock_increment', pid=p.id) }}">
+          <button type="submit" class="icon-btn plus">+</button>
+        </form>
+      </div>
+    </td>
+    <td><a class="edit-btn" href="{{ url_for('products_edit', pid=p.id) }}">{{ t('Edit') }}</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endfor %}
+{% endblock %}

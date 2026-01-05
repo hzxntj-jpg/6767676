@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Athayde System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if user and user.theme_primary_color %}
+  <style>:root{--primary: {{ user.theme_primary_color }} }</style>
+  {% endif %}
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{{ url_for('dashboard') if logged_in else url_for('landing') }}">
+        <img src="{{ url_for('static', filename='logo_gaming.svg') }}" alt="Athayde" class="brand-logo">
+      </a>
+      <nav class="menu">
+        {% if logged_in %}
+          <a href="{{ url_for('dashboard') }}">{{ t('Dashboard') }}</a>
+          <a href="{{ url_for('orders_list') }}">{{ t('Orders') }}</a>
+          <a href="{{ url_for('products_list') }}">{{ t('Products') }}</a>
+          <a href="{{ url_for('low_stock_view') }}">{{ t('Low Stock') }}</a>
+          <a href="{{ url_for('orders_new') }}">{{ t('New Sale') }}</a>
+          <a href="{{ url_for('purchases_list') }}">{{ t('Purchases') }}</a>
+          <a href="{{ url_for('purchases_new') }}">{{ t('New Purchase') }}</a>
+          <a href="{{ url_for('customers_list') }}">{{ t('Customers') }}</a>
+          <a href="{{ url_for('suppliers_list') }}">{{ t('Suppliers') }}</a>
+          {% if is_admin %}
+          <a href="{{ url_for('admin_users') }}">{{ t('Admin') }}</a>
+          <a href="{{ url_for('admin_keys') }}">{{ t('Keys') }}</a>
+          {% endif %}
+          <a href="{{ url_for('account_settings') }}">{{ t('Settings') }}</a>
+          <a href="{{ url_for('auth_logout') }}">{{ t('Logout') }}</a>
+          <div class="dropdown">
+            <a class="dropdown-toggle">{{ lang|upper }}</a>
+            <div class="dropdown-menu">
+              <a href="{{ url_for('i18n_set', lang='en') }}">English</a>
+              <a href="{{ url_for('i18n_set', lang='pt') }}">Português</a>
+            </div>
+          </div>
+        {% else %}
+          <a href="{{ url_for('auth_login') }}">{{ t('Login') }}</a>
+          <a href="{{ url_for('auth_register') }}">{{ t('Register') }}</a>
+          <a href="{{ url_for('buy') }}">{{ t('Purchase') }}</a>
+          <div class="dropdown">
+            <a class="dropdown-toggle">{{ lang|upper }}</a>
+            <div class="dropdown-menu">
+              <a href="{{ url_for('i18n_set', lang='en') }}">English</a>
+              <a href="{{ url_for('i18n_set', lang='pt') }}">Português</a>
+            </div>
+          </div>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    made by: Rafael Athayde ; rafael.athaydee@gmail.com
+  </footer>
+  <script>
+    (function(){
+      var toggles=document.querySelectorAll(".dropdown .dropdown-toggle");
+      toggles.forEach(function(tg){
+        tg.addEventListener("click",function(ev){
+          ev.preventDefault();
+          var dd=tg.closest(".dropdown");
+          if(!dd) return;
+          var isOpen=dd.classList.contains("open");
+          document.querySelectorAll(".dropdown.open").forEach(function(x){ x.classList.remove("open"); });
+          if(!isOpen){ dd.classList.add("open"); }
+        });
+      });
+      document.addEventListener("click",function(ev){
+        var within=ev.target.closest(".dropdown");
+        if(!within){
+          document.querySelectorAll(".dropdown.open").forEach(function(x){ x.classList.remove("open"); });
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

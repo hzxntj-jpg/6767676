@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Sales Orders') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="{{ t('Search by customer') }}">
+  <button type="submit">{{ t('Search') }}</button>
+  <a class="btn" href="{{ url_for('orders_new') }}">{{ t('Add Order') }}</a>
+</form>
+<table>
+  <tr><th>{{ t('ID') }}</th><th>{{ t('Customer') }}</th><th>{{ t('Date') }}</th><th>{{ t('Status') }}</th><th>{{ t('Total') }}</th></tr>
+  {% for o in orders %}
+  <tr>
+    <td>{{ o.id }}</td>
+    <td>{{ o.customer.name if o.customer else '' }}</td>
+    <td>{{ o.date.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ o.status }}</td>
+    <td>{{ '%.2f'|format(o.total) }}</td>
+  </tr>
+  <tr>
+    <td colspan="5">
+      <table class="order-items" style="width:100%;background:#fafafa;border:1px solid #eee">
+        <tr>
+          <th style="text-align:left">{{ t('Product') }}</th>
+          <th style="text-align:right">{{ t('Quantity') }}</th>
+          <th style="text-align:right">{{ t('Unit Price') }}</th>
+        </tr>
+        {% for item in o.items %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td style="text-align:right">{{ item.quantity }}</td>
+          <td style="text-align:right">{{ '%.2f'|format(item.unit_price) }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="5" style="text-align:right">
+      <form method="post" action="{{ url_for('orders_finish', oid=o.id) }}" style="display:inline">
+        <button type="submit" class="pill-btn">{{ t('Finish') }}</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

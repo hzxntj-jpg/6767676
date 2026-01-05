@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Bulk Add Customers</h1>
+<form method="post">
+  <label>Lines (Name, Email, Phone)</label>
+  <textarea name="lines" rows="10" style="width:100%"></textarea>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

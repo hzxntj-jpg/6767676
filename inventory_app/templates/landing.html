@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="front-title">Athayde system</div>
+  <div class="hero-inner">
+    <h1 class="hero-title">Grow Faster with Smart Sales, Purchases & Inventory</h1>
+    <p class="hero-sub">All-in-one control with instant updates, clear insights, and guided decisions.</p>
+    <div class="dash-cards">
+      <div class="dash-card">
+        <div class="dc-label">Real-time Sales</div>
+        <div class="dc-value accent" data-target="128">0</div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-label">Purchases Today</div>
+        <div class="dc-value accent" data-target="14">0</div>
+      </div>
+      <div class="dash-card alert">
+        <div class="dc-label">Low Stock Alerts</div>
+        <div class="dc-value accent" data-target="7">0</div>
+      </div>
+    </div>
+    <ul class="hero-bullets">
+      <li>Instant updates for sales, purchases, and stock</li>
+      <li>Smart alerts and clear reports</li>
+      <li>Customizable and mobile-friendly</li>
+    </ul>
+    <div class="hero-actions">
+      <a class="cta-btn cta-large cta-primary" href="{{ url_for('auth_register') }}">{{ t('Get Started') }}</a>
+      <a class="cta-btn cta-large cta-purchase" href="{{ url_for('buy') }}">{{ t('Purchase') }}</a>
+      <a class="cta-btn cta-large cta-secondary" href="{{ url_for('auth_login') }}">Login</a>
+    </div>
+    <div class="divider"></div>
+    <h1 class="hero-title">Seu Assistente Inteligente de Negócios — Vendas, Compras e Estoque em um só lugar</h1>
+    <p class="hero-sub">Tudo em um só lugar: atualizações instantâneas, insights claros e decisões guiadas.</p>
+    <ul class="hero-bullets">
+      <li>Atualizações instantâneas de vendas, compras e estoque</li>
+      <li>Alertas inteligentes e relatórios claros</li>
+      <li>Personalizável e pronto para mobile</li>
+    </ul>
+    <div class="hero-actions">
+      <a class="cta-btn cta-large cta-primary" href="{{ url_for('auth_register') }}">{{ t('Get Started') }}</a>
+      <a class="cta-btn cta-large cta-purchase" href="{{ url_for('buy') }}">{{ t('Purchase') }}</a>
+      <a class="cta-btn cta-large cta-secondary" href="{{ url_for('auth_login') }}">Entrar</a>
+    </div>
+    <p class="hero-foot">Everything your business needs to grow – smart, fast, and beautiful.</p>
+    <p class="support">por support: rafael.athaydee@gmail.com</p>
+  </div>
+  <aside class="hero-side">
+    <div class="features">
+      <div class="feature-card">
+        <div class="fc-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#3b82f6"><rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="8" width="5" height="12" rx="1"/><rect x="17" y="12" width="5" height="8" rx="1"/></svg>
+        </div>
+        <div class="fc-title">{{ t('Real-time Inventory') }}</div>
+        <div class="fc-text">{{ t('Track stock with instant updates') }}</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#22c55e"><path d="M4 6h16v3H4zM4 11h10v3H4zM4 16h7v3H4z"/></svg>
+        </div>
+        <div class="fc-title">{{ t('Smart Purchases') }}</div>
+        <div class="fc-text">{{ t('Plan and restock with confidence') }}</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#f59e0b"><circle cx="12" cy="12" r="10" opacity=".25"/><path d="M6 14c3-6 9-6 12 0" stroke="#f59e0b" stroke-width="2" fill="none"/></svg>
+        </div>
+        <div class="fc-title">{{ t('Sales Insights') }}</div>
+        <div class="fc-text">{{ t('Clear reports to grow faster') }}</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#a78bfa"><path d="M12 3a5 5 0 015 5v2h1a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7a2 2 0 012-2h1V8a5 5 0 015-5z"/></svg>
+        </div>
+        <div class="fc-title">{{ t('Secure & Multi-Account') }}</div>
+        <div class="fc-text">{{ t('Data isolated per user') }}</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#06b6d4"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg>
+        </div>
+        <div class="fc-title">{{ t('Achievements') }}</div>
+        <div class="fc-text">{{ t('Level up while you work') }}</div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="art-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="mesh"></div>
+        <svg class="chart" viewBox="0 0 240 120">
+          <polyline points="0,90 40,80 80,60 120,70 160,40 200,50 240,30" fill="none" stroke="#3b82f6" stroke-width="3"/>
+          <rect x="30" y="70" width="16" height="30" fill="#22c55e"/>
+          <rect x="90" y="50" width="16" height="50" fill="#22c55e" opacity=".8"/>
+          <rect x="150" y="35" width="16" height="65" fill="#22c55e" opacity=".6"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+</section>
+<script>
+(function(){
+  var els=document.querySelectorAll(".dc-value");
+  els.forEach(function(el){
+    var target=parseInt(el.getAttribute("data-target")||"0",10);
+    var cur=0;
+    var step=Math.max(1, Math.floor(target/60));
+    function tick(){
+      cur+=step;
+      if(cur>=target){ cur=target; }
+      el.textContent=cur;
+      if(cur<target){ requestAnimationFrame(tick); }
+    }
+    tick();
+  });
+})();
+</script>
+{% endblock %}

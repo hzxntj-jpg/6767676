@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Customers') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="{{ t('Search customers') }}">
+  <button type="submit">{{ t('Search') }}</button>
+  <a class="btn" href="{{ url_for('customers_new') }}">{{ t('Add Customer') }}</a>
+</form>
+<table>
+  <tr><th>{{ t('Name') }}</th><th>{{ t('Email') }}</th><th>{{ t('Phone') }}</th></tr>
+  {% for c in customers %}
+  <tr><td>{{ c.name }}</td><td>{{ c.email }}</td><td>{{ c.phone }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

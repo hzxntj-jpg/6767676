@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Low Stock') }}</h1>
+<table>
+  <tr><th>SKU</th><th>{{ t('Products') }}</th><th>Category</th><th>Stock</th></tr>
+  {% for p in items %}
+  <tr><td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.category }}</td><td>{{ p.stock }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

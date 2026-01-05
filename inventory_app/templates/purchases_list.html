@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Purchase Orders') }}</h1>
+<form method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="{{ t('Search by supplier') }}">
+  <button type="submit">{{ t('Search') }}</button>
+  <a class="btn" href="{{ url_for('purchases_new') }}">{{ t('Add Purchase') }}</a>
+</form>
+<table>
+  <tr><th>{{ t('ID') }}</th><th>{{ t('Suppliers') }}</th><th>{{ t('Date') }}</th><th>{{ t('Status') }}</th><th>{{ t('Total') }}</th><th></th></tr>
+  {% for po in purchases %}
+  <tr>
+    <td>{{ po.id }}</td>
+    <td>{{ po.supplier.name if po.supplier else '' }}</td>
+    <td>{{ po.date.strftime('%Y-%m-%d %H:%M') }}</td>
+    <td>{{ po.status }}</td>
+    <td>{{ '%.2f'|format(po.total) }}</td>
+    <td>
+      {% if po.status != 'finished' %}
+      <form method="post" action="{{ url_for('purchases_finish', poid=po.id) }}">
+        <button class="pill-btn" type="submit">{{ t('Finish') }}</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wait-wrap">
+  <div class="wait-card">
+    <h1 class="wait-title">Processing Payment</h1>
+    <p class="wait-sub">Waiting for confirmation. This will redirect to your key automatically.</p>
+    <div class="wait-meta">Email: {{ email }} • Plan: {{ plan|capitalize }}</div>
+    <div class="wait-spin"></div>
+  </div>
+</section>
+<script>
+(function(){
+  var email = "{{ email }}";
+  function check(){
+    fetch("/buy/check_key?email=" + encodeURIComponent(email))
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.found){
+          window.location.href = "/buy/key?email=" + encodeURIComponent(email);
+        } else {
+          setTimeout(check, 3000);
+        }
+      })
+      .catch(function(){ setTimeout(check, 4000); });
+  }
+  if(email){ check(); }
+})();
+</script>
+{% endblock %}

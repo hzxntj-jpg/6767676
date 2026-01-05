@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Settings</h1>
+<form method="post" style="max-width:420px">
+  <label>Theme Primary Color</label>
+  <input type="color" name="theme_primary_color" value="{{ user.theme_primary_color or '#3b82f6' }}">
+  <button type="submit">Save</button>
+</form>
+{% if license_key %}
+<div class="card" style="max-width:420px;margin-top:16px">
+  <div style="font-weight:600">Your License</div>
+  <div style="font-family:monospace;font-size:18px">{{ license_key.code }}</div>
+  <div>Plan: {{ license_key.plan|capitalize }}</div>
+  <div>Expires: {{ license_key.expires_at.strftime('%Y-%m-%d') }}</div>
+  <div>Source: {{ license_key.payment_source|capitalize }}</div>
+</div>
+{% endif %}
+{% endblock %}

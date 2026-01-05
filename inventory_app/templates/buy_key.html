@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="key-wrap">
+  <div class="key-card">
+    <h1 class="key-title">Your Access Key</h1>
+    <div class="key-code">{{ license_key.code }}</div>
+    <div class="key-meta">Plan: {{ license_key.plan|capitalize }} • Expires: {{ license_key.expires_at.strftime('%Y-%m-%d') }}</div>
+    <div class="key-actions">
+      <a class="cta-btn" href="{{ url_for('auth_register') }}">Use Key to Create Account</a>
+      <button class="pill-btn" id="copyKey">Copy Key</button>
+    </div>
+    <p class="key-note">Keep this key safe. Use it on the registration page to create your account.</p>
+  </div>
+</section>
+<script>
+  (function(){
+    var btn=document.getElementById("copyKey");
+    if(btn){
+      btn.addEventListener("click",function(){
+        var text="{{ license_key.code }}";
+        navigator.clipboard.writeText(text);
+        btn.textContent="Copied";
+        setTimeout(function(){ btn.textContent="Copy Key"; }, 1500);
+      });
+    }
+  })();
+</script>
+{% endblock %}

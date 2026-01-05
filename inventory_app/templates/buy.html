@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="pricing">
+  <div class="pricing-intro">
+    <h1 class="pricing-title">{{ t('Choose Your Plan') }}</h1>
+    <p class="pricing-sub">{{ t('Monthly') }} / {{ t('Mensal') if lang=='pt' else 'Mensal' }} • {{ t('Yearly') }} / {{ t('Anual') if lang=='pt' else 'Anual' }}</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="pc-head">Monthly / Mensal</div>
+      <div class="pc-price">$5</div>
+      <div class="pc-alt">R$ • PIX</div>
+      <div class="pc-desc">{{ t('Access for 30 days') }}</div>
+      <ul class="pc-benefits">
+        <li>{{ t('Instant license key') }}</li>
+        <li>{{ t('All features included') }}</li>
+        <li>{{ t('Priority support') }}</li>
+      </ul>
+      <button class="pc-cta" data-plan="monthly">{{ t('Buy Now') }}</button>
+    </div>
+    <div class="price-card best">
+      <div class="pc-badge">{{ t('Best Value') }}</div>
+      <div class="pc-head">Annual / Anual</div>
+      <div class="pc-price">$15</div>
+      <div class="pc-alt">{{ t('Equivalent to $1.25/month') }}</div>
+      <div class="pc-desc">{{ t('Access for 365 days') }}</div>
+      <div class="pc-save">{{ t('Save 75% vs monthly') }}</div>
+      <ul class="pc-benefits">
+        <li>{{ t('Instant license key') }}</li>
+        <li>{{ t('All features included') }}</li>
+        <li>{{ t('Priority support') }}</li>
+      </ul>
+      <button class="pc-cta strong" data-plan="annual">{{ t('Buy Now') }}</button>
+    </div>
+  </div>
+  <!-- removed retrieve-by-email section as requested -->
+</section>
+  <div class="modal" id="currencyModal">
+    <div class="modal-card">
+      <h3>{{ t('Choose your currency') }}</h3>
+      <div class="modal-actions">
+        <button class="pill-btn" data-cur="brl">🇧🇷 BRL (PIX)</button>
+        <button class="pill-btn" data-cur="usd">🇺🇸 USD (Card)</button>
+      </div>
+      <button class="link-btn" id="modalClose">{{ t('Cancel') }}</button>
+    </div>
+    <div class="modal-backdrop"></div>
+  </div>
+<script>
+(function(){
+  var links = {
+    monthly: { usd: "https://buy.stripe.com/test_7sY14p8ed5IFdSy50deUU00", brl: "https://mpago.la/1bttump" },
+    annual:  { usd: "https://buy.stripe.com/test_4gMeVfamlfjf01I50deUU01", brl: "https://mpago.la/1iqHQva" }
+  };
+  var selectedPlan = null;
+  var modal = document.getElementById("currencyModal");
+  function openModal(plan){
+    selectedPlan = plan;
+    modal.classList.add("open");
+  }
+  function closeModal(){
+    modal.classList.remove("open");
+  }
+  document.querySelectorAll(".pc-cta[data-plan]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      openModal(btn.getAttribute("data-plan"));
+    });
+  });
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  modal.querySelectorAll("[data-cur]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var cur = b.getAttribute("data-cur");
+      var url = links[selectedPlan][cur];
+      var email = window.prompt("Enter your email to receive the key:");
+      if(!email){ return; }
+      try { localStorage.setItem("buy_email", email); } catch(e){}
+      window.open(url, "_blank");
+      var q = "?email=" + encodeURIComponent(email) + "&plan=" + encodeURIComponent(selectedPlan);
+      window.location.href = "/buy/success" + q;
+    });
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Register') }}</h1>
+{% if error %}<div style="color:#ff6b6b">{{ error }}</div>{% endif %}
+<form method="post" style="max-width:420px">
+  <label>{{ t('Name') }}</label>
+  <input type="text" name="name">
+  <label>{{ t('Email') }}</label>
+  <input type="email" name="email" required>
+  <label>{{ t('Password') }}</label>
+  <input type="password" name="password" required>
+  <button type="submit">{{ t('Create Account') }}</button>
+  <p style="color:var(--muted);margin-top:8px">{{ t('Already have an account? Login') }} <a href="{{ url_for('auth_login') }}">{{ t('Login') }}</a></p>
+{% endblock %}

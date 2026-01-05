@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Keys') }}</h1>
+<form method="post" style="display:flex;gap:8px;align-items:center">
+  <button class="pill-btn" name="plan" value="monthly" type="submit">Issue Monthly Key</button>
+  <button class="pill-btn" name="plan" value="annual" type="submit">Issue Annual Key</button>
+  <a class="btn" href="{{ url_for('buy') }}">Buy Page</a>
+  <a class="btn" href="{{ url_for('auth_register') }}">Use Key</a>
+  <span style="color:var(--muted)">Admin-only generator</span>
+  </form>
+<table>
+  <tr><th>Code</th><th>Plan</th><th>Issued</th><th>Expires</th><th>Redeemed By</th><th>Redeemed At</th></tr>
+  {% for k in keys %}
+  <tr>
+    <td style="font-family:'Nunito','Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-weight:800">{{ k.code }}</td>
+    <td>{{ k.plan }}</td>
+    <td>{{ k.created_at.strftime('%Y-%m-%d') if k.created_at else '' }}</td>
+    <td>{{ k.expires_at.strftime('%Y-%m-%d') if k.expires_at else '' }}</td>
+    <td>{{ k.redeemed_by_user_id or '' }}</td>
+    <td>{{ k.redeemed_at.strftime('%Y-%m-%d') if k.redeemed_at else '' }}</td>
+  </tr>
+  {% endfor %}
+  {% if keys|length == 0 %}
+  <tr><td colspan="6" style="color:var(--muted)">No keys yet</td></tr>
+  {% endif %}
+</table>
+{% endblock %}

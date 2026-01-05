@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('Dashboard') }}</h1>
+{% if not paid_access %}
+<div class="card" style="border:1px dashed var(--primary);padding:16px;margin-bottom:16px;max-width:520px">
+  <div style="font-weight:700;margin-bottom:8px">Features Locked</div>
+  <p style="margin-bottom:12px">Enter your license key to unlock all features.</p>
+  <form method="post" action="{{ url_for('account_activate_key') }}">
+    <input type="text" name="license_key" placeholder="XXXX-XXXX-XXXX-XXXX" style="width:280px">
+    <button type="submit">Activate</button>
+    <a href="{{ url_for('buy') }}" class="link-btn" style="margin-left:8px">Buy a License</a>
+  </form>
+  {% if user and not user.is_admin %}
+  <p style="color:var(--muted);margin-top:8px">You can also purchase a plan after logging in.</p>
+  {% endif %}
+  </div>
+{% endif %}
+<div class="dash-cards">
+  <div class="dash-card">
+    <div class="dc-label">{{ t('Sales Today') }}</div>
+    <div class="dc-value" id="dc-sales">0</div>
+  </div>
+  <div class="dash-card">
+    <div class="dc-label">{{ t('Purchases Today') }}</div>
+    <div class="dc-value" id="dc-purchases">0</div>
+  </div>
+  <div class="dash-card alert">
+    <div class="dc-label">{{ t('Low Stock') }}</div>
+    <div class="dc-value" id="dc-low">0</div>
+  </div>
+</div>
+{% if alerts and alerts|length > 0 %}
+<div class="alerts">
+  {% for a in alerts %}
+  <div class="alert-pill">{{ a }}</div>
+  {% endfor %}
+{% endif %}
+{% if badges and badges|length > 0 %}
+<div class="badges">
+  {% for b in badges %}
+    <div class="badge">{{ b.title }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+<div class="card" style="max-width:280px">
+  <div style="font-size:14px;color:var(--muted)">{{ t('Products label') }}</div>
+  <div style="font-size:32px;font-weight:700">{{ product_count }}</div>
+</div>
+<h2>{{ t('Low Stock') }}</h2>
+<table>
+  <tr><th>{{ t('SKU') }}</th><th>{{ t('Name') }}</th><th>{{ t('Category') }}</th><th>{{ t('Stock') }}</th></tr>
+  {% for p in low_stock %}
+  <tr><td>{{ p.sku }}</td><td>{{ p.name }}</td><td>{{ p.category }}</td><td>{{ p.stock }}</td></tr>
+  {% endfor %}
+</table>
+<h2>{{ t('Recent Sales') }}</h2>
+<table>
+  <tr><th>{{ t('ID') }}</th><th>{{ t('Customer') }}</th><th>{{ t('Date') }}</th><th>{{ t('Total') }}</th></tr>
+  {% for o in recent_sales %}
+  <tr><td>{{ o.id }}</td><td>{{ o.customer.name if o.customer else "" }}</td><td>{{ o.date.strftime("%Y-%m-%d %H:%M") }}</td><td>{{ "%.2f"|format(o.total) }}</td></tr>
+  {% endfor %}
+</table>
+<h2>{{ t('Recent Purchases') }}</h2>
+<table>
+  <tr><th>{{ t('ID') }}</th><th>{{ t('Supplier') }}</th><th>{{ t('Date') }}</th><th>{{ t('Total') }}</th></tr>
+  {% for po in recent_purchases %}
+  <tr><td>{{ po.id }}</td><td>{{ po.supplier.name if po.supplier else "" }}</td><td>{{ po.date.strftime("%Y-%m-%d %H:%M") }}</td><td>{{ "%.2f"|format(po.total) }}</td></tr>
+  {% endfor %}
+</table>
+<script>
+(function(){
+  function requestNotifs(){
+    if("Notification" in window && Notification.permission !== "granted"){
+      try { Notification.requestPermission(); } catch(e){}
+    }
+  }
+  requestNotifs();
+  function animateTo(el, target){
+    var cur = parseFloat(el.textContent) || 0;
+    target = Math.round(target);
+    var step = Math.max(1, Math.floor((target - cur) / 20));
+    function tick(){
+      cur += step;
+      if(step > 0 ? cur >= target : cur <= target){ cur = target; }
+      el.textContent = cur;
+      if(cur !== target){ requestAnimationFrame(tick); }
+    }
+    requestAnimationFrame(tick);
+  }
+  function notify(msg){
+    if("Notification" in window && Notification.permission === "granted"){
+      new Notification(msg);
+    }
+  }
+  function loadStats(){
+    fetch("{{ url_for('api_stats') }}").then(function(r){ return r.json(); }).then(function(j){
+      var s = document.getElementById("dc-sales");
+      var p = document.getElementById("dc-purchases");
+      var l = document.getElementById("dc-low");
+      if(s) animateTo(s, j.sales_today || 0);
+      if(p) animateTo(p, j.purchases_today || 0);
+      if(l) animateTo(l, j.low_stock_count || 0);
+      if(j.sales_drop){ notify("Sales have dropped compared to yesterday"); }
+      if((j.low_stock_count||0) > 0){ notify(j.low_stock_count + " products are low on stock"); }
+    }).catch(function(){});
+  }
+  loadStats();
+  setInterval(loadStats, 10000);
+})();
+</script>
+{% endblock %}

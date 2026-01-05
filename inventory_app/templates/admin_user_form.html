@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit User</h1>
+<form method="post" style="max-width:500px">
+  <label>Name</label>
+  <input type="text" name="name" value="{{ user.name or '' }}">
+  <label>Email</label>
+  <input type="email" name="email" value="{{ user.email }}">
+  <label>New Password (optional)</label>
+  <input type="password" name="password">
+  <label style="display:flex;align-items:center;gap:8px">
+    <input type="checkbox" name="is_admin" {% if user.is_admin %}checked{% endif %}> Admin
+  </label>
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

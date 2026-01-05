@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ t('New Sale') }}</h1>
+<form method="post" id="orderForm">
+  <label>{{ t('Customer') }}</label>
+  <input type="text" id="customerSearch" placeholder="{{ t('Search customer') }}">
+  <select name="customer_id" id="customerSelect" required>
+    {% for c in customers %}
+    <option value="{{ c.id }}">{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  <div id="items">
+    <div class="item">
+      <label>{{ t('Product') }}</label>
+      <input type="text" class="productSearch" placeholder="{{ t('Search product') }}">
+      <select name="product_id[]" class="productSelect">
+        {% for p in products %}
+        <option value="{{ p.id }}">{{ p.name }} ({{ p.stock }})</option>
+        {% endfor %}
+      </select>
+      <label>{{ t('Qty') }}</label>
+      <input type="number" name="quantity[]" value="1" min="1">
+    </div>
+  </div>
+  <button type="button" id="addItem">{{ t('Add Item') }}</button>
+  <button type="submit">{{ t('Create') }}</button>
+</form>
+<script>
+function filterSelect(input, select) {
+  const q = input.value.toLowerCase();
+  for (const opt of select.options) {
+    const txt = opt.text.toLowerCase();
+    opt.hidden = q && !txt.includes(q);
+  }
+}
+const cs = document.getElementById('customerSearch');
+const csel = document.getElementById('customerSelect');
+cs.addEventListener('input', () => filterSelect(cs, csel));
+document.getElementById('addItem').addEventListener('click', function() {
+  var items = document.getElementById('items');
+  var first = items.querySelector('.item');
+  var clone = first.cloneNode(true);
+  items.appendChild(clone);
+  const last = items.lastElementChild;
+  const ps = last.querySelector('.productSearch');
+  const psel = last.querySelector('.productSelect');
+  ps.addEventListener('input', () => filterSelect(ps, psel));
+});
+document.querySelector('.productSearch').addEventListener('input', function(){
+  filterSelect(this, document.querySelector('.productSelect'));
+});
+</script>
+{% endblock %}

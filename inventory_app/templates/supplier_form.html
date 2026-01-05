@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>New Supplier</h1>
+<form method="post">
+  <label>Name</label>
+  <input name="name" required>
+  <label>Email</label>
+  <input name="email">
+  <label>Phone</label>
+  <input name="phone">
+  <button type="submit">Save</button>
+</form>
+{% endblock %}
